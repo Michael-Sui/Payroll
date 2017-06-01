@@ -1,7 +1,5 @@
 package test;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
 /**
@@ -9,7 +7,7 @@ import org.junit.Test;
  */
 public class Log4j {
     @Test
-    public void Log4jTest() {
-        Logger LOG = LogManager.getLogger(Log4j.class);
+    public void test() {
+        org.apache.logging.log4j.Logger LOG = org.apache.logging.log4j.LogManager.getLogger(Log4j.class);
     }
 }

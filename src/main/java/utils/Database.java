@@ -3,27 +3,24 @@ package utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
 /**
  * Created by Michael on 2017/6/1.
  */
 public class Database {
-    private static final Logger LOG = LogManager.getLogger(Database.class);
-    private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/payroll?useSSL=false";
-    private static final String USER = "root";
-    private static final String PASSWORD = "mysql";
-    Connection connection = null;
+    private final Logger LOG = LogManager.getLogger(Database.class);
+    private final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+    private final String DB_URL = "jdbc:mysql://localhost/payroll?useSSL=false";
+    private final String USER = "root";
+    private final String PASSWORD = "mysql";
+    private Connection connection = null;
 
-    String sql = null;
-    Statement statement = null;
-    ResultSet resultSet = null;
+    private String sql = null;
+    private PreparedStatement preparedStatement = null;
+    private ResultSet resultSet = null;
 
-    private boolean connect() {
+    public boolean connect() {
         try {
             Class.forName(JDBC_DRIVER);
             connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
@@ -34,7 +31,8 @@ public class Database {
         }
         return true;
     }
-    private boolean disconnect() {
+
+    public boolean disconnect() {
         try {
             try {
                 resultSet.close();
@@ -42,9 +40,9 @@ public class Database {
                 LOG.warn("result为空，已关闭");
             }
             try {
-                statement.close();
+                preparedStatement.close();
             } catch (Exception e) {
-                LOG.warn("statement为空，已关闭");
+                LOG.warn("preparedStatement为空，已关闭");
             }
             sql = null;
             try {
@@ -57,5 +55,36 @@ public class Database {
             return false;
         }
         return true;
+    }
+
+    public UserAuthority isLogin(String id, String password) {
+        try {
+            sql = "SELECT authority FROM user WHERE id = ? and password = ?;";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, id);
+            preparedStatement.setString(2, password);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet == null) {
+                LOG.info("用户使用id = " + id + ", password = " + password + ",登录失败");
+                return UserAuthority.ERROR;
+            } else {
+                resultSet.next();
+                String authority = resultSet.getString("authority");
+                if (authority.equals("guest")) {
+                    LOG.info("用户使用id = " + id + ", password = " + password + ",GUEST登录成功");
+                    return UserAuthority.GUEST;
+                } else if (authority.equals("admin")) {
+                    LOG.info("用户使用id = " + id + ", password = " + password + ",ADMIN登录成功");
+                    return UserAuthority.ADMIN;
+                } else {
+                    LOG.info("用户使用id = " + id + ", password = " + password + ",登录失败");
+                    return UserAuthority.ERROR;
+                }
+            }
+        } catch (SQLException e) {
+            LOG.error("登录过程出现异常");
+        }
+        LOG.error("用户使用id = " + id + ", password = " + password + ",登录失败");
+        return UserAuthority.ERROR;
     }
 }
