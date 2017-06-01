@@ -54,6 +54,7 @@ public class Database {
             LOG.error("断开数据库连接失败");
             return false;
         }
+        LOG.info("断开了数据库的连接");
         return true;
     }
 
