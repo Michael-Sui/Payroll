@@ -22,7 +22,8 @@ public class AuthorityFilter implements javax.servlet.Filter {
         String requestPath = httpServletRequest.getServletPath();
         if (httpSession.getAttribute("user") == null &&
                 !requestPath.endsWith("/index.jsp") &&
-                !requestPath.endsWith("/page/login.jsp")) {
+                !requestPath.endsWith("/page/login.jsp") &&
+                !requestPath.endsWith("jpg")) {
             httpServletResponse.sendRedirect("/index.jsp");
         } else {
             chain.doFilter(request, response);
