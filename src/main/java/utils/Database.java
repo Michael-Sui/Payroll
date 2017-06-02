@@ -37,18 +37,18 @@ public class Database {
             try {
                 resultSet.close();
             } catch (Exception e) {
-                LOG.warn("result为空，已关闭");
+                LOG.info("result为空，已关闭");
             }
             try {
                 preparedStatement.close();
             } catch (Exception e) {
-                LOG.warn("preparedStatement为空，已关闭");
+                LOG.info("preparedStatement为空，已关闭");
             }
             sql = null;
             try {
                 connection.close();
             } catch (Exception e) {
-                LOG.warn("connection为空，已关闭");
+                LOG.info("connection为空，已关闭");
             }
         } catch (Exception e) {
             LOG.error("断开数据库连接失败");
@@ -60,26 +60,26 @@ public class Database {
 
     public UserAuthority isLogin(String id, String password) {
         try {
-            sql = "SELECT authority FROM user WHERE id = ? and password = ?;";
+            sql = "SELECT authority FROM user WHERE id = ? AND password = ?;";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, id);
             preparedStatement.setString(2, password);
             resultSet = preparedStatement.executeQuery();
-            if (resultSet == null) {
-                LOG.info("用户使用id = " + id + ", password = " + password + ",登录失败");
+            if (!resultSet.next()) {
+                LOG.warn("用户使用id = " + id + ", password = " + password + ",登录失败");
                 return UserAuthority.ERROR;
             } else {
-                resultSet.next();
                 String authority = resultSet.getString("authority");
-                if (authority.equals("guest")) {
-                    LOG.info("用户使用id = " + id + ", password = " + password + ",GUEST登录成功");
-                    return UserAuthority.GUEST;
-                } else if (authority.equals("admin")) {
-                    LOG.info("用户使用id = " + id + ", password = " + password + ",ADMIN登录成功");
-                    return UserAuthority.ADMIN;
-                } else {
-                    LOG.info("用户使用id = " + id + ", password = " + password + ",登录失败");
-                    return UserAuthority.ERROR;
+                switch (authority) {
+                    case "guest":
+                        LOG.info("用户使用id = " + id + ", password = " + password + ",GUEST登录成功");
+                        return UserAuthority.GUEST;
+                    case "admin":
+                        LOG.info("用户使用id = " + id + ", password = " + password + ",ADMIN登录成功");
+                        return UserAuthority.ADMIN;
+                    default:
+                        LOG.error("用户使用id = " + id + ", password = " + password + ",登录失败");
+                        return UserAuthority.ERROR;
                 }
             }
         } catch (SQLException e) {
