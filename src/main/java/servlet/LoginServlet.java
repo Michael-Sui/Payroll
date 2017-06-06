@@ -31,11 +31,6 @@ public class LoginServlet extends HttpServlet {
         database.disconnect();
         httpSession.setAttribute("user", id);
         httpSession.setAttribute("authority", userAuthority.toString());
-        if (userAuthority.toString().equals("ADMIN") || userAuthority.toString().equals("GUEST")) {
-            httpSession.setAttribute("loginFlag", "true");
-        } else {
-            httpSession.setAttribute("loginFlag", "false");
-        }
         switch (userAuthority) {
             case ADMIN:
                 LOG.info("ADMIN:" + id + "登陆");
