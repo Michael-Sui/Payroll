@@ -1,16 +1,15 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Michael
-  Date: 2017/6/6
-  Time: 14:10
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>普通用户主页</title>
 </head>
 <body>
-
+    <a href="">个人信息管理</a>
+    <br>
+    <a href="">工资支付方式管理</a>
+    <br>
+    <a href="">个人工资单报告</a>
+    <br>
+    <a href="">业务相关管理</a>
 </body>
 </html>
