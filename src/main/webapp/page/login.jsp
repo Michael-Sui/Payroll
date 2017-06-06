@@ -6,12 +6,22 @@
 </head>
 <body>
     <h1>请您先进行登录操作</h1>
+    <br>
     <form method="post" action="LoginServlet">
-        用户名：<input type="text" name="id">
-        <br>
-        密码：<input type="password" name="password">
-        <br>
-        <input type="submit" value="登录" />
+        <table>
+            <tr>
+                <td>用户名：</td>
+                <td><input type="text" name="id"></td>
+            </tr>
+            <tr>
+                <td>密码：</td>
+                <td><input type="password" name="password"></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="登录" /></td>
+            </tr>
+        </table>
     </form>
 </body>
 </html>

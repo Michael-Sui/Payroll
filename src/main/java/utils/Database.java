@@ -1,5 +1,6 @@
 package utils;
 
+import bean.PersonalInformation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -87,5 +88,33 @@ public class Database {
         }
         LOG.error("用户使用id = " + id + ", password = " + password + ",登录失败");
         return UserAuthority.ERROR;
+    }
+
+    public PersonalInformation getPersonalInformation(String id) {
+        try {
+            PersonalInformation personalInformation = new PersonalInformation();
+            sql = "SELECT * FROM information WHERE id = ?;";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, id);
+            resultSet = preparedStatement.executeQuery();
+            if (!resultSet.next()) {
+                LOG.error(id + "查询个人信息失败");
+                return null;
+            } else {
+                personalInformation.setId(id);
+                personalInformation.setName(resultSet.getString("name"));
+                personalInformation.setGender(resultSet.getString("gender"));
+                personalInformation.setPhoneNumber(resultSet.getString("phoneNumber"));
+                personalInformation.setEmail(resultSet.getString("email"));
+                personalInformation.setAge(resultSet.getInt("age"));
+                personalInformation.setAddress(resultSet.getString("address"));
+                personalInformation.setPaymentMethod(resultSet.getInt("paymentMethod"));
+                LOG.info(id + "获取个人信息成功");
+                return personalInformation;
+            }
+        } catch (Exception e) {
+            LOG.error("获取个人信息出现异常");
+        }
+        return null;
     }
 }

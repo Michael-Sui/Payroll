@@ -4,7 +4,9 @@
     <title>普通用户主页</title>
 </head>
 <body>
-    <a href="">个人信息管理</a>
+    <h1>普通用户主页</h1>
+    <br>
+    <a href="/page/PersonalInformationServlet">个人信息管理</a>
     <br>
     <a href="">工资支付方式管理</a>
     <br>
