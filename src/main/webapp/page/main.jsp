@@ -8,10 +8,8 @@
     <br>
     <a href="/page/PersonalInformationServlet">个人信息管理</a>
     <br>
-    <a href="">工资支付方式管理</a>
-    <br>
     <a href="">个人工资单报告</a>
     <br>
-    <a href="">业务相关管理</a>
+    <a href="/page/businessManager.jsp">业务相关管理</a>
 </body>
 </html>

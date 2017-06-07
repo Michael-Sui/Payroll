@@ -67,7 +67,7 @@ public class Database {
             preparedStatement.setString(2, password);
             resultSet = preparedStatement.executeQuery();
             if (!resultSet.next()) {
-                LOG.warn("用户使用id = " + id + ", password = " + password + ",登录失败");
+                LOG.info("用户使用id = " + id + ", password = " + password + ",登录失败");
                 return UserAuthority.ERROR;
             } else {
                 String authority = resultSet.getString("authority");
@@ -138,6 +138,27 @@ public class Database {
             }
         } catch (Exception e) {
             LOG.error(personalInformation.getId() + "更新个人信息抛出异常");
+        }
+    }
+
+    public TimeCardState getTimeCardState(String id) {
+        try {
+            sql = "SELECT flag from timecard WHERE id = ?";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, id);
+            resultSet = preparedStatement.executeQuery();
+            TimeCardState timeCardState = null;
+            while (resultSet.next()) {
+                timeCardState = resultSet.getInt("flag") == 0 ? TimeCardState.ON_DUTY : TimeCardState.OFF_DUTY;
+            }
+            if (timeCardState == null) {
+                timeCardState = TimeCardState.OFF_DUTY;
+            }
+            LOG.info(id + "获取上/下班打卡状态成功");
+            return timeCardState;
+        } catch (Exception e) {
+            LOG.error("获取上/下班打卡状态失败出现异常");
+            return null;
         }
     }
 }
