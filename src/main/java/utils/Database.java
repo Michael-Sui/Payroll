@@ -132,7 +132,7 @@ public class Database {
             preparedStatement.setString(8, personalInformation.getId());
             int result = preparedStatement.executeUpdate();
             if (result == 0) {
-                LOG.warn(personalInformation.getId() + "未更新数据库");
+                LOG.error(personalInformation.getId() + "未更新数据库");
             } else {
                 LOG.info(personalInformation.getId() + "更新个人信息成功");
             }
@@ -143,7 +143,7 @@ public class Database {
 
     public TimeCardState getTimeCardState(String id) {
         try {
-            sql = "SELECT flag from timecard WHERE id = ?";
+            sql = "SELECT flag from timecard WHERE id = ?;";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, id);
             resultSet = preparedStatement.executeQuery();
@@ -159,6 +159,42 @@ public class Database {
         } catch (Exception e) {
             LOG.error("获取上/下班打卡状态失败出现异常");
             return null;
+        }
+    }
+
+    public void onDuty(String id) {
+        try {
+            sql = "INSERT INTO timecard VALUES(?, ?, ?);";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, id);
+            preparedStatement.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
+            preparedStatement.setInt(3, 0);
+            int result = preparedStatement.executeUpdate();
+            if (result == 0) {
+                LOG.error(id + "上班打卡更新数据库失败");
+            } else {
+                LOG.info(id + "上班打卡更新数据库成功");
+            }
+        } catch (Exception e) {
+            LOG.error(id + "上班打卡更新数据库抛出异常");
+        }
+    }
+
+    public void offDuty(String id) {
+        try {
+            sql = "INSERT INTO timecard VALUES(?, ?, ?);";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, id);
+            preparedStatement.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
+            preparedStatement.setInt(3, 1);
+            int result = preparedStatement.executeUpdate();
+            if (result == 0) {
+                LOG.error(id + "下班打卡更新数据库失败");
+            } else {
+                LOG.info(id + "下班打卡更新数据库成功");
+            }
+        } catch (Exception e) {
+            LOG.error(id + "下班打卡更新数据库抛出异常");
         }
     }
 }
