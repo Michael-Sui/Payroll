@@ -10,25 +10,40 @@
     <% PersonalInformation personalInformation = (PersonalInformation) session.getAttribute("personalInformation"); %>
     <table>
         <tr>
-            <th>用户名</th>
-            <th>姓名</th>
-            <th>性别</th>
-            <th>电话号码</th>
-            <th>电子邮箱地址</th>
-            <th>年龄</th>
-            <th>家庭地址</th>
-            <th>工资支付方式</th>
+            <td>用户名</td>
+            <td><%= personalInformation.getId() %></td>
         </tr>
         <tr>
-            <td><%= personalInformation.getId() %></td>
+            <td>姓名</td>
             <td><%= personalInformation.getName() %></td>
+        </tr>
+        <tr>
+            <td>性别</td>
             <td><%= personalInformation.getGender() %></td>
+        </tr>
+        <tr>
+            <td>电话号码</td>
             <td><%= personalInformation.getPhoneNumber() %></td>
+        </tr>
+        <tr>
+            <td>电子邮箱地址</td>
             <td><%= personalInformation.getEmail() %></td>
+        </tr>
+        <tr>
+            <td>年龄</td>
             <td><%= personalInformation.getAge() %></td>
+        </tr>
+        <tr>
+            <td>家庭地址</td>
             <td><%= personalInformation.getAddress() %></td>
+        </tr>
+        <tr>
+            <td>工资支付方式</td>
             <td><%= personalInformation.getPaymentMethod() %></td>
         </tr>
     </table>
+    <a href="/page/changePersonalInformation.jsp">修改个人信息</a>
+    <br>
+    <a href="/page/main.jsp">返回普通用户主页</a>
 </body>
 </html>
