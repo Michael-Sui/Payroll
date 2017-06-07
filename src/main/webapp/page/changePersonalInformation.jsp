@@ -1,3 +1,4 @@
+<%@ page import="bean.PersonalInformation" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -6,6 +7,46 @@
 <body>
     <h1>个人信息的修改</h1>
     <br>
-
+    <% PersonalInformation personalInformation = (PersonalInformation) session.getAttribute("personalInformation"); %>
+    <form method="post" action="ChangePersonalInformationServlet">
+        <table>
+            <tr>
+                <td>用户名</td>
+                <td><input type="text" name="id" value=<%= personalInformation.getId() %> readonly></td>
+            </tr>
+            <tr>
+                <td>姓名</td>
+                <td><input type="text" name="name" value=<%= personalInformation.getName() %> required></td>
+            </tr>
+            <tr>
+                <td>性别</td>
+                <td><input type="text" name="gender" value=<%= personalInformation.getGender() %> required></td>
+            </tr>
+            <tr>
+                <td>电话号码</td>
+                <td><input type="text" name="phoneNumber" value=<%= personalInformation.getPhoneNumber() %> required></td>
+            </tr>
+            <tr>
+                <td>电子邮箱地址</td>
+                <td><input type="email" name="email" value=<%= personalInformation.getEmail() %> required></td>
+            </tr>
+            <tr>
+                <td>年龄</td>
+                <td><input type="number" name="age" value=<%= personalInformation.getAge() %> required></td>
+            </tr>
+            <tr>
+                <td>家庭地址</td>
+                <td><input type="text" name="address" value=<%= personalInformation.getAddress() %> required></td>
+            </tr>
+            <tr>
+                <td>工资支付方式</td>
+                <td><input type="number" name="paymentMethod" value=<%= personalInformation.getPaymentMethod() %> required></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="提交修改"/></td>
+            </tr>
+        </table>
+    </form>
 </body>
 </html>

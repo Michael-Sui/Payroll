@@ -117,4 +117,27 @@ public class Database {
         }
         return null;
     }
+
+    public void updatePersonalInformation(PersonalInformation personalInformation) {
+        try {
+            sql = "UPDATE information SET name = ?, gender = ?, phoneNumber = ?, email = ?, age = ?, address = ?, paymentMethod = ? where id = ?;";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, personalInformation.getName());
+            preparedStatement.setString(2, personalInformation.getGender());
+            preparedStatement.setString(3, personalInformation.getPhoneNumber());
+            preparedStatement.setString(4, personalInformation.getEmail());
+            preparedStatement.setInt(5, personalInformation.getAge());
+            preparedStatement.setString(6, personalInformation.getAddress());
+            preparedStatement.setInt(7, personalInformation.getPaymentMethod());
+            preparedStatement.setString(8, personalInformation.getId());
+            int result = preparedStatement.executeUpdate();
+            if (result == 0) {
+                LOG.warn(personalInformation.getId() + "未更新数据库");
+            } else {
+                LOG.info(personalInformation.getId() + "更新个人信息成功");
+            }
+        } catch (Exception e) {
+            LOG.error(personalInformation.getId() + "更新个人信息抛出异常");
+        }
+    }
 }
