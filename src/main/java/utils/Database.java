@@ -1,10 +1,12 @@
 package utils;
 
 import bean.PersonalInformation;
+import bean.PurchaseOrder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * Created by Michael on 2017/6/1.
@@ -195,6 +197,50 @@ public class Database {
             }
         } catch (Exception e) {
             LOG.error(id + "下班打卡更新数据库抛出异常");
+        }
+    }
+
+    public ArrayList<PurchaseOrder> getPurchaseOrder(String id) {
+        try {
+            sql = "SELECT * FROM purchaseorder WHERE id = ?;";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, id);
+            resultSet = preparedStatement.executeQuery();
+            ArrayList<PurchaseOrder> purchaseOrders = new ArrayList<>();
+            while (resultSet.next()) {
+                PurchaseOrder purchaseOrder = new PurchaseOrder();
+                purchaseOrder.setId(resultSet.getString("id"));
+                purchaseOrder.setOrderId(resultSet.getString("orderId"));
+                purchaseOrder.setTime(resultSet.getTimestamp("time"));
+                purchaseOrder.setMoney(resultSet.getDouble("money"));
+                purchaseOrder.setProportion(resultSet.getDouble("proportion"));
+                purchaseOrders.add(purchaseOrder);
+            }
+            LOG.info(id + "获取订单信息成功");
+            return purchaseOrders;
+        } catch (Exception e) {
+            LOG.error(id + "获取订单信息抛出异常");
+        }
+        return null;
+    }
+
+    public void addPurchaseOrder(PurchaseOrder purchaseOrder) {
+        try {
+            sql = "INSERT INTO purchaseorder VALUES(?, ?, ?, ?, ?);";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, purchaseOrder.getId());
+            preparedStatement.setString(2, purchaseOrder.getOrderId());
+            preparedStatement.setTimestamp(3, purchaseOrder.getTime());
+            preparedStatement.setDouble(4, purchaseOrder.getMoney());
+            preparedStatement.setDouble(5, purchaseOrder.getProportion());
+            int result = preparedStatement.executeUpdate();
+            if (result == 0) {
+                LOG.error(purchaseOrder.getId() + "添加订单" + purchaseOrder.getOrderId() + "失败");
+            } else {
+                LOG.info(purchaseOrder.getId() + "添加订单" + purchaseOrder.getOrderId() + "成功");
+            }
+        } catch (Exception e) {
+            LOG.error(purchaseOrder.getId() + "添加订单" + purchaseOrder.getOrderId() + "抛出了异常");
         }
     }
 }
