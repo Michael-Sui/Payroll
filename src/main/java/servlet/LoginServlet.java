@@ -19,35 +19,41 @@ import java.io.IOException;
 @WebServlet(name = "LoginServlet", urlPatterns = {"/page/LoginServlet"})
 public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
         Logger LOG = LogManager.getLogger(LoginServlet.class);
-        HttpSession httpSession = request.getSession();
-        String id = request.getParameter("id");
-        String password = request.getParameter("password");
-        Database database = new Database();
-        database.connect();
-        UserAuthority userAuthority = database.isLogin(id, password);
-        database.disconnect();
-        httpSession.setAttribute("user", id);
-        httpSession.setAttribute("authority", userAuthority.toString());
-        switch (userAuthority) {
-            case ADMIN:
-                LOG.info("ADMIN:" + id + "登陆");
-                response.sendRedirect("/page/main-admin.jsp");
-                break;
-            case GUEST:
-                LOG.info("GUEST:" + id + "登陆");
-                response.sendRedirect("/page/main.jsp");
-                break;
-            case ERROR:
-                LOG.info("ERROR:" + id + "登陆");
-                response.sendRedirect("/page/error.jsp");
-                break;
-            default:
-                LOG.error("未知用户身份:" + id + "登陆");
-                response.sendRedirect("/page/error.jsp");
-                break;
+        try {
+            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding("UTF-8");
+
+            HttpSession httpSession = request.getSession();
+            String id = request.getParameter("id");
+            String password = request.getParameter("password");
+            Database database = new Database();
+            database.connect();
+            UserAuthority userAuthority = database.isLogin(id, password);
+            database.disconnect();
+            httpSession.setAttribute("user", id);
+            httpSession.setAttribute("authority", userAuthority.toString());
+            switch (userAuthority) {
+                case ADMIN:
+                    LOG.info("ADMIN:" + id + "登陆");
+                    response.sendRedirect("/page/main-admin.jsp");
+                    break;
+                case GUEST:
+                    LOG.info("GUEST:" + id + "登陆");
+                    response.sendRedirect("/page/main.jsp");
+                    break;
+                case ERROR:
+                    LOG.info("ERROR:" + id + "登陆");
+                    response.sendRedirect("/page/error.jsp");
+                    break;
+                default:
+                    LOG.error("未知用户身份:" + id + "登陆");
+                    response.sendRedirect("/page/error.jsp");
+                    break;
+            }
+        } catch (Exception e) {
+            LOG.error("抛出了异常");
+            response.sendRedirect("/page/error.jsp");
         }
     }
 

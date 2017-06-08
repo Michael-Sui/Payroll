@@ -11,7 +11,6 @@ import test.Database;
  */
 public class Test {
     public static void main(String[] args) {
-        //Result result = JUnitCore.runClasses(Log4j.class);
         Result result = JUnitCore.runClasses(Database.class);
 
         for (Failure failure : result.getFailures()) {

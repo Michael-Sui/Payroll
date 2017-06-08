@@ -1,6 +1,8 @@
 package servlet;
 
 import bean.PersonalInformation;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import utils.Database;
 
 import javax.servlet.ServletException;
@@ -21,17 +23,23 @@ public class PersonalInformationServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
+        Logger LOG = LogManager.getLogger(PersonalInformationServlet.class);
+        try {
+            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding("UTF-8");
 
-        HttpSession httpSession = request.getSession();
-        String id = httpSession.getAttribute("user").toString();
-        Database database = new Database();
-        database.connect();
-        PersonalInformation personalInformation = database.getPersonalInformation(id);
-        database.disconnect();
-        httpSession.setAttribute("personalInformation", personalInformation);
+            HttpSession httpSession = request.getSession();
+            String id = httpSession.getAttribute("user").toString();
+            Database database = new Database();
+            database.connect();
+            PersonalInformation personalInformation = database.getPersonalInformation(id);
+            database.disconnect();
+            httpSession.setAttribute("personalInformation", personalInformation);
 
-        response.sendRedirect("/page/personalInformation.jsp");
+            response.sendRedirect("/page/personalInformation.jsp");
+        } catch (Exception e) {
+            LOG.error("抛出了异常");
+            response.sendRedirect("/page/error.jsp");
+        }
     }
 }

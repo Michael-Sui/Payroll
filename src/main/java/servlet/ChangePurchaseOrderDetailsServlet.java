@@ -16,10 +16,10 @@ import java.sql.Timestamp;
 /**
  * Created by Michael on 2017/6/8.
  */
-@WebServlet(name = "AddPurchaseOrderServlet", urlPatterns = {"/page/AddPurchaseOrderServlet"})
-public class AddPurchaseOrderServlet extends HttpServlet {
+@WebServlet(name = "ChangePurchaseOrderDetailsServlet", urlPatterns = {"/page/ChangePurchaseOrderDetailsServlet"})
+public class ChangePurchaseOrderDetailsServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Logger LOG = LogManager.getLogger(AddPurchaseOrderServlet.class);
+        Logger LOG = LogManager.getLogger(ChangePurchaseOrderDetailsServlet.class);
         try {
             request.setCharacterEncoding("UTF-8");
             response.setCharacterEncoding("UTF-8");
@@ -32,7 +32,7 @@ public class AddPurchaseOrderServlet extends HttpServlet {
             purchaseOrder.setProportion(Double.valueOf(request.getParameter("proportion")));
             Database database = new Database();
             database.connect();
-            database.addPurchaseOrder(purchaseOrder);
+            database.changePurchaseOrder(purchaseOrder);
             database.disconnect();
 
             response.sendRedirect("/page/PurchaseOrderServlet");

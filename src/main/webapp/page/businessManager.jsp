@@ -9,5 +9,7 @@
     <a href="/page/TimeCardServlet">上、下班打卡</a>
     <br>
     <a href="/page/PurchaseOrderServlet">销售业务记录管理</a>
+    <br>
+    <a href="/page/main.jsp">返回普通用户主页</a>
 </body>
 </html>

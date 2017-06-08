@@ -48,5 +48,7 @@
             </tr>
         </table>
     </form>
+    <br>
+    <a href="/page/main.jsp">返回普通用户主页</a>
 </body>
 </html>

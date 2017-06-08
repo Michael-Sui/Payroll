@@ -1,5 +1,8 @@
 package filter;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -16,6 +19,8 @@ public class AuthorityFilter implements javax.servlet.Filter {
                          javax.servlet.FilterChain chain) throws javax.servlet.ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
+
+        Logger LOG = LogManager.getLogger(AuthorityFilter.class);
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         HttpSession httpSession = httpServletRequest.getSession();
@@ -25,8 +30,10 @@ public class AuthorityFilter implements javax.servlet.Filter {
                 !requestPath.endsWith("/page/login.jsp") &&
                 !requestPath.endsWith(".jpg") &&
                 !requestPath.endsWith("Servlet")) {
+            LOG.warn("拦截了一个请求");
             httpServletResponse.sendRedirect("/index.jsp");
         } else {
+            LOG.info("通过了一个请求");
             chain.doFilter(request, response);
         }
     }

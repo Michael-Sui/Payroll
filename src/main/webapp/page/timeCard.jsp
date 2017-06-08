@@ -15,5 +15,7 @@
     <br>
     <a href="/page/OffDutyServlet">下班打卡</a>
     <% } %>
+    <br>
+    <a href="/page/main.jsp">返回普通用户主页</a>
 </body>
 </html>

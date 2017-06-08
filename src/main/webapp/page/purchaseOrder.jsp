@@ -32,13 +32,14 @@
             <td>订单抽成</td>
             <td><%= purchaseOrder.getProportion() %></td>
         </tr>
-        <tr>
-
-        </tr>
     </table>
+    <br><br><br>
     <%  }
     } %>
     <a href="/page/addPurchaseOrder.jsp">添加订单信息</a>
+    <br>
     <a href="/page/FindExistPurchaseOrderServlet">修改订单信息</a>
+    <br>
+    <a href="/page/main.jsp">返回普通用户主页</a>
 </body>
 </html>

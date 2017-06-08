@@ -243,4 +243,49 @@ public class Database {
             LOG.error(purchaseOrder.getId() + "添加订单" + purchaseOrder.getOrderId() + "抛出了异常");
         }
     }
+
+    public PurchaseOrder getPurchaseOrderByOrderId(String changePurchaseOrderId) {
+        try {
+            sql = "SELECT * FROM purchaseorder WHERE orderId = ?;";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, changePurchaseOrderId);
+            resultSet = preparedStatement.executeQuery();
+            if (!resultSet.next()) {
+                LOG.error("查询订单" + changePurchaseOrderId + "失败");
+                return null;
+            } else {
+                PurchaseOrder purchaseOrder = new PurchaseOrder();
+                purchaseOrder.setId(resultSet.getString("id"));
+                purchaseOrder.setOrderId(resultSet.getString("orderId"));
+                purchaseOrder.setTime(resultSet.getTimestamp("time"));
+                purchaseOrder.setMoney(resultSet.getDouble("money"));
+                purchaseOrder.setProportion(resultSet.getDouble("proportion"));
+                LOG.info("查询订单" + changePurchaseOrderId + "成功");
+                return purchaseOrder;
+            }
+        } catch (Exception e) {
+            LOG.error("查询订单" + changePurchaseOrderId + "抛出了异常");
+        }
+        return null;
+    }
+
+    public void changePurchaseOrder(PurchaseOrder purchaseOrder) {
+        try {
+            sql = "UPDATE purchaseorder SET time = ?, money = ?, proportion = ? WHERE id = ? AND orderId = ?;";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setTimestamp(1, purchaseOrder.getTime());
+            preparedStatement.setDouble(2, purchaseOrder.getMoney());
+            preparedStatement.setDouble(3, purchaseOrder.getProportion());
+            preparedStatement.setString(4, purchaseOrder.getId());
+            preparedStatement.setString(5, purchaseOrder.getOrderId());
+            int result = preparedStatement.executeUpdate();
+            if (result == 0) {
+                LOG.error(purchaseOrder.getId() + "的订单" + purchaseOrder.getOrderId() + "未更新成功");
+            } else {
+                LOG.info(purchaseOrder.getId() + "的订单" + purchaseOrder.getOrderId() + "更新成功");
+            }
+        } catch (Exception e) {
+            LOG.error(purchaseOrder.getId() + "的订单" + purchaseOrder.getOrderId() + "更新时抛出异常");
+        }
+    }
 }

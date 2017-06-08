@@ -1,9 +1,9 @@
 package servlet;
 
+import bean.PurchaseOrder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import utils.Database;
-import utils.TimeCardState;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,32 +14,33 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * Created by Michael on 2017/6/7.
+ * Created by Michael on 2017/6/8.
  */
-@WebServlet(name = "TimeCardServlet", urlPatterns = {"/page/TimeCardServlet"})
-public class TimeCardServlet extends HttpServlet {
+@WebServlet(name = "ChangePurchaseOrderServlet", urlPatterns = {"/page/ChangePurchaseOrderServlet"})
+public class ChangePurchaseOrderServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
-    }
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Logger LOG = LogManager.getLogger(TimeCardServlet.class);
+        Logger LOG = LogManager.getLogger(ChangePurchaseOrderServlet.class);
         try {
             request.setCharacterEncoding("UTF-8");
             response.setCharacterEncoding("UTF-8");
 
-            HttpSession httpSession = request.getSession();
-            String id = httpSession.getAttribute("user").toString();
+            String changePurchaseOrderId = request.getParameter("changePurchaseOrderId");
+            PurchaseOrder purchaseOrder = new PurchaseOrder();
             Database database = new Database();
             database.connect();
-            TimeCardState timeCardState = database.getTimeCardState(id);
+            purchaseOrder = database.getPurchaseOrderByOrderId(changePurchaseOrderId);
             database.disconnect();
-            httpSession.setAttribute("timeCardState", timeCardState);
+            HttpSession httpSession = request.getSession();
+            httpSession.setAttribute("purchaseOrder", purchaseOrder);
 
-            response.sendRedirect("/page/timeCard.jsp");
+            response.sendRedirect("/page/changePurchaseOrderDetails.jsp");
         } catch (Exception e) {
             LOG.error("抛出了异常");
             response.sendRedirect("/page/error.jsp");
         }
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doPost(request, response);
     }
 }

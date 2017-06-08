@@ -1,6 +1,8 @@
 package servlet;
 
 import bean.PersonalInformation;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import utils.Database;
 
 import javax.servlet.ServletException;
@@ -17,33 +19,39 @@ import java.io.IOException;
 @WebServlet(name = "ChangePersonalInformationServlet", urlPatterns = {"/page/ChangePersonalInformationServlet"})
 public class ChangePersonalInformationServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
+        Logger LOG = LogManager.getLogger(ChangePersonalInformationServlet.class);
+        try {
+            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding("UTF-8");
 
-        HttpSession httpSession = request.getSession();
-        String id = httpSession.getAttribute("user").toString();
-        String name = request.getParameter("name");
-        String gender = request.getParameter("gender");
-        String phoneNumber = request.getParameter("phoneNumber");
-        String email = request.getParameter("email");
-        int age = Integer.valueOf(request.getParameter("age"));
-        String address = request.getParameter("address");
-        int paymentMethod = Integer.valueOf(request.getParameter("paymentMethod"));
-        PersonalInformation personalInformation = new PersonalInformation();
-        personalInformation.setId(id);
-        personalInformation.setName(name);
-        personalInformation.setGender(gender);
-        personalInformation.setPhoneNumber(phoneNumber);
-        personalInformation.setEmail(email);
-        personalInformation.setAge(age);
-        personalInformation.setAddress(address);
-        personalInformation.setPaymentMethod(paymentMethod);
-        Database database = new Database();
-        database.connect();
-        database.updatePersonalInformation(personalInformation);
-        database.disconnect();
+            HttpSession httpSession = request.getSession();
+            String id = httpSession.getAttribute("user").toString();
+            String name = request.getParameter("name");
+            String gender = request.getParameter("gender");
+            String phoneNumber = request.getParameter("phoneNumber");
+            String email = request.getParameter("email");
+            int age = Integer.valueOf(request.getParameter("age"));
+            String address = request.getParameter("address");
+            int paymentMethod = Integer.valueOf(request.getParameter("paymentMethod"));
+            PersonalInformation personalInformation = new PersonalInformation();
+            personalInformation.setId(id);
+            personalInformation.setName(name);
+            personalInformation.setGender(gender);
+            personalInformation.setPhoneNumber(phoneNumber);
+            personalInformation.setEmail(email);
+            personalInformation.setAge(age);
+            personalInformation.setAddress(address);
+            personalInformation.setPaymentMethod(paymentMethod);
+            Database database = new Database();
+            database.connect();
+            database.updatePersonalInformation(personalInformation);
+            database.disconnect();
 
-        response.sendRedirect("/page/PersonalInformationServlet");
+            response.sendRedirect("/page/PersonalInformationServlet");
+        } catch (Exception e) {
+            LOG.error("抛出了异常");
+            response.sendRedirect("/page/error.jsp");
+        }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
