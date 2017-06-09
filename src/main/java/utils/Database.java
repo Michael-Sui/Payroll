@@ -3,6 +3,7 @@ package utils;
 import bean.PersonalInformation;
 import bean.PurchaseOrder;
 import bean.Salary;
+import bean.TimeCard;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -365,11 +366,90 @@ public class Database {
                 salary.setSalary(resultSet.getDouble("salary"));
                 salaries.add(salary);
             }
-            LOG.info(id + "使用查询方式:" + inquireMode + ",查询参数：" + details + "查询成功");
+            LOG.info(id + "使用查询方式:" + inquireMode + ",查询参数：" + details + "查询基本工资成功");
             return salaries;
         } catch (Exception e) {
-            LOG.error(id + "使用查询方式:" + inquireMode + ",查询参数：" + details + "查询抛出异常");
+            LOG.error(id + "使用查询方式:" + inquireMode + ",查询参数：" + details + "查询基本工资抛出异常");
             return null;
+        }
+    }
+
+    public ArrayList<TimeCard> getTimeCardByDay(String id, String inquireMode, String details) {
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Calendar now = Calendar.getInstance();
+            java.util.Date date1 = null;
+            java.util.Date date2 = null;
+            String time1 = null;
+            String time2 = null;
+            Timestamp timestamp1 = null;
+            Timestamp timestamp2 = null;
+            switch (inquireMode) {
+                case "inquireByDay":
+                    sql = "SELECT * FROM timecard where id = ? AND time >= ? AND time < ?;";
+                    preparedStatement = connection.prepareStatement(sql);
+                    preparedStatement.setString(1, id);
+                    date1 = simpleDateFormat.parse("" + now.get(Calendar.YEAR) + "-" + now.get(Calendar.MONTH) + "-" + details + " 00:00:00");
+                    date2 = simpleDateFormat.parse("" + now.get(Calendar.YEAR) + "-" + now.get(Calendar.MONTH) + "-" + String.valueOf(Integer.valueOf(details) + 1) + " 00:00:00");
+                    time1 = simpleDateFormat.format(date1);
+                    time2 = simpleDateFormat.format(date2);
+                    timestamp1 = Timestamp.valueOf(time1);
+                    timestamp2 = Timestamp.valueOf(time2);
+                    preparedStatement.setTimestamp(2, timestamp1);
+                    preparedStatement.setTimestamp(3, timestamp2);
+                    break;
+                case "inquireByMonth":
+                    sql = "SELECT * FROM timecard WHERE id = ? AND time >= ? AND time < ?;";
+                    preparedStatement = connection.prepareStatement(sql);
+                    preparedStatement.setString(1, id);
+                    date1 = simpleDateFormat.parse("" + now.get(Calendar.YEAR) + "-" + details + "-01 00:00:00");
+                    date2 = simpleDateFormat.parse("" + now.get(Calendar.YEAR) + "-" + String.valueOf(Integer.valueOf(details) + 1) + "-01 00:00:00");
+                    time1 = simpleDateFormat.format(date1);
+                    time2 = simpleDateFormat.format(date2);
+                    timestamp1 = Timestamp.valueOf(time1);
+                    timestamp2 = Timestamp.valueOf(time2);
+                    preparedStatement.setTimestamp(2, timestamp1);
+                    preparedStatement.setTimestamp(3, timestamp2);
+                    break;
+                case "inquireAll":
+                    sql = "SELECT * FROM timecard WHERE id = ?;";
+                    preparedStatement = connection.prepareStatement(sql);
+                    preparedStatement.setString(1, id);
+                    break;
+            }
+            resultSet = preparedStatement.executeQuery();
+            ArrayList<TimeCard> timeCards = new ArrayList<>();
+            while (resultSet.next()) {
+                TimeCard timeCard = new TimeCard();
+                timeCard.setId(resultSet.getString("id"));
+                timeCard.setTime(resultSet.getTimestamp("time"));
+                timeCard.setFlag(resultSet.getInt("flag"));
+                timeCards.add(timeCard);
+            }
+            LOG.info(id + "使用查询方式:" + inquireMode + ",查询参数：" + details + "查询计时工资成功");
+            return timeCards;
+        } catch (Exception e) {
+            LOG.error(id + "使用查询方式:" + inquireMode + ",查询参数：" + details + "查询计时工资抛出异常");
+            return null;
+        }
+    }
+
+    public double getHourlyEmployeeSalary(String id) {
+        try {
+            sql = "SELECT salary FROM hourlyemployeesalary WHERE id = ?;";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, id);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                LOG.info(id + "查询每小时工资成功");
+                return resultSet.getDouble("salary");
+            } else {
+                LOG.error(id + "查询每小时工资失败");
+                return -1;
+            }
+        } catch (Exception e) {
+            LOG.error(id + "查询每小时工资抛出了异常");
+            return -1;
         }
     }
 }

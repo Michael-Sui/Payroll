@@ -1,6 +1,7 @@
 package servlet;
 
 import bean.Salary;
+import bean.TimeCard;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import utils.Database;
@@ -25,7 +26,7 @@ public class CreateEmployeeReportServlet extends HttpServlet {
             request.setCharacterEncoding("UTF-8");
             response.setCharacterEncoding("UTF-8");
 
-            String requireMode = request.getParameter("inquireMode");
+            String inquireMode = request.getParameter("inquireMode");
             String details = request.getParameter("details");
             HttpSession httpSession = request.getSession();
             String id = httpSession.getAttribute("user").toString();
@@ -35,35 +36,32 @@ public class CreateEmployeeReportServlet extends HttpServlet {
             switch (employeeType) {
                 case 0:
                     double commonEmployeeSalary = database.getCommonEmployeeSalary(id);
-                    ArrayList<Salary> salaries = database.getAllSalaryWithEmployeeType0(id, requireMode, details);
+                    ArrayList<Salary> salaries = database.getAllSalaryWithEmployeeType0(id, inquireMode, details);
+                    database.disconnect();
                     httpSession.setAttribute("commonEmployeeSalary", commonEmployeeSalary);
                     httpSession.setAttribute("salaries", salaries);
                     response.sendRedirect("/page/salaryWithEmployeeType0.jsp");
                     break;
                 case 1:
-                    switch (requireMode) {
-                        case "requireByDay":
-
-                        case "requireByMonth":
-
-                        case "requireAll":
-
-                        default:
-
-                    }
+                    double hourlyEmployeeSalary = database.getHourlyEmployeeSalary(id);
+                    ArrayList<TimeCard> timeCards = database.getTimeCardByDay(id, inquireMode, details);
+                    database.disconnect();
+                    httpSession.setAttribute("hourlyEmployeeSalary", hourlyEmployeeSalary);
+                    httpSession.setAttribute("timeCards", timeCards);
+                    response.sendRedirect("/page/salaryWithEmployeeType1.jsp");
+                    break;
                 case 2:
-                    switch (requireMode) {
-                        case "requireByDay":
+                    switch (inquireMode) {
+                        case "inquireByDay":
 
-                        case "requireByMonth":
+                        case "inquireByMonth":
 
-                        case "requireAll":
+                        case "inquireAll":
 
                         default:
 
                     }
             }
-            database.disconnect();
         } catch (Exception e) {
             LOG.error("抛出了异常");
         }
