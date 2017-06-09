@@ -30,9 +30,11 @@ public class LoginServlet extends HttpServlet {
             Database database = new Database();
             database.connect();
             UserAuthority userAuthority = database.isLogin(id, password);
+            int employeeType = database.getEmployeeType(id);
             database.disconnect();
             httpSession.setAttribute("user", id);
             httpSession.setAttribute("authority", userAuthority.toString());
+            httpSession.setAttribute("employeeType", employeeType);
             switch (userAuthority) {
                 case ADMIN:
                     LOG.info("ADMIN:" + id + "登陆");

@@ -43,6 +43,10 @@
                 <td><input type="number" name="paymentMethod" value=<%= personalInformation.getPaymentMethod() %> required></td>
             </tr>
             <tr>
+                <td>员工类型</td>
+                <td><input type="number" name="employeeType" value=<%= personalInformation.getEmployeeType() %> readonly></td>
+            </tr>
+            <tr>
                 <td></td>
                 <td><input type="submit" value="提交修改"/></td>
             </tr>

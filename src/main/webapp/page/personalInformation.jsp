@@ -41,6 +41,10 @@
             <td>工资支付方式</td>
             <td><%= personalInformation.getPaymentMethod() %></td>
         </tr>
+        <tr>
+            <td>员工类型</td>
+            <td><%= personalInformation.getEmployeeType() %></td>
+        </tr>
     </table>
     <a href="/page/changePersonalInformation.jsp">修改个人信息</a>
     <br>

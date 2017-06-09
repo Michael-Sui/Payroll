@@ -2,11 +2,14 @@ package utils;
 
 import bean.PersonalInformation;
 import bean.PurchaseOrder;
+import bean.Salary;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by Michael on 2017/6/1.
@@ -111,6 +114,7 @@ public class Database {
                 personalInformation.setAge(resultSet.getInt("age"));
                 personalInformation.setAddress(resultSet.getString("address"));
                 personalInformation.setPaymentMethod(resultSet.getInt("paymentMethod"));
+                personalInformation.setEmployeeType(resultSet.getInt("employeeType"));
                 LOG.info(id + "获取个人信息成功");
                 return personalInformation;
             }
@@ -122,7 +126,7 @@ public class Database {
 
     public void updatePersonalInformation(PersonalInformation personalInformation) {
         try {
-            sql = "UPDATE information SET name = ?, gender = ?, phoneNumber = ?, email = ?, age = ?, address = ?, paymentMethod = ? where id = ?;";
+            sql = "UPDATE information SET name = ?, gender = ?, phoneNumber = ?, email = ?, age = ?, address = ?, paymentMethod = ?, employeeType = ? where id = ?;";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, personalInformation.getName());
             preparedStatement.setString(2, personalInformation.getGender());
@@ -131,7 +135,8 @@ public class Database {
             preparedStatement.setInt(5, personalInformation.getAge());
             preparedStatement.setString(6, personalInformation.getAddress());
             preparedStatement.setInt(7, personalInformation.getPaymentMethod());
-            preparedStatement.setString(8, personalInformation.getId());
+            preparedStatement.setInt(8, personalInformation.getEmployeeType());
+            preparedStatement.setString(9, personalInformation.getId());
             int result = preparedStatement.executeUpdate();
             if (result == 0) {
                 LOG.error(personalInformation.getId() + "未更新数据库");
@@ -286,6 +291,85 @@ public class Database {
             }
         } catch (Exception e) {
             LOG.error(purchaseOrder.getId() + "的订单" + purchaseOrder.getOrderId() + "更新时抛出异常");
+        }
+    }
+
+    public int getEmployeeType(String id) {
+        try {
+            sql = "SELECT employeeType FROM information WHERE id = ?;";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, id);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                LOG.info(id + "查询员工类型成功");
+                return resultSet.getInt("employeeType");
+            } else {
+                LOG.error(id + "查询员工类型失败");
+                return -1;
+            }
+        } catch (Exception e) {
+            LOG.error(id + "查询员工类型抛出了异常");
+            return -1;
+        }
+    }
+
+    public double getCommonEmployeeSalary(String id) {
+        try {
+            sql = "SELECT salary FROM commonemployeesalary WHERE id = ?;";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, id);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                LOG.info(id + "查询每月基本工资成功");
+                return resultSet.getDouble("salary");
+            } else {
+                LOG.error(id + "查询每月基本工资失败");
+                return -1;
+            }
+        } catch (Exception e) {
+            LOG.error(id + "查询每月基本工资抛出了异常");
+            return -1;
+        }
+    }
+
+    public ArrayList<Salary> getAllSalaryWithEmployeeType0(String id, String inquireMode, String details) {
+        try {
+            switch (inquireMode) {
+                case "inquireByMonth":
+                    sql = "SELECT * FROM salary WHERE id = ? AND time >= ? AND time < ?;";
+                    preparedStatement = connection.prepareStatement(sql);
+                    preparedStatement.setString(1, id);
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Calendar now = Calendar.getInstance();
+                    java.util.Date date1 = simpleDateFormat.parse("" + now.get(Calendar.YEAR) + "-" + details + "-01 00:00:00");
+                    java.util.Date date2 = simpleDateFormat.parse("" + now.get(Calendar.YEAR) + "-" + String.valueOf(Integer.valueOf(details) + 1) + "-01 00:00:00");
+                    String time1 = simpleDateFormat.format(date1);
+                    String time2 = simpleDateFormat.format(date2);
+                    Timestamp timestamp1 = Timestamp.valueOf(time1);
+                    Timestamp timestamp2 = Timestamp.valueOf(time2);
+                    preparedStatement.setTimestamp(2, timestamp1);
+                    preparedStatement.setTimestamp(3, timestamp2);
+                    break;
+                case "inquireAll":
+                    sql = "SELECT * FROM salary WHERE id = ?;";
+                    preparedStatement = connection.prepareStatement(sql);
+                    preparedStatement.setString(1, id);
+                    break;
+            }
+            resultSet = preparedStatement.executeQuery();
+            ArrayList<Salary> salaries = new ArrayList<>();
+            while (resultSet.next()) {
+                Salary salary = new Salary();
+                salary.setId(resultSet.getString("id"));
+                salary.setTime(resultSet.getTimestamp("time"));
+                salary.setSalary(resultSet.getDouble("salary"));
+                salaries.add(salary);
+            }
+            LOG.info(id + "使用查询方式:" + inquireMode + ",查询参数：" + details + "查询成功");
+            return salaries;
+        } catch (Exception e) {
+            LOG.error(id + "使用查询方式:" + inquireMode + ",查询参数：" + details + "查询抛出异常");
+            return null;
         }
     }
 }

@@ -12,6 +12,7 @@ public class PersonalInformation {
     private int age;
     private String address;
     private int paymentMethod;
+    private int employeeType;
 
     public String getId() {
         return id;
@@ -75,5 +76,13 @@ public class PersonalInformation {
 
     public void setPaymentMethod(int paymentMethod) {
         this.paymentMethod = paymentMethod;
+    }
+
+    public int getEmployeeType() {
+        return employeeType;
+    }
+
+    public void setEmployeeType(int employeeType) {
+        this.employeeType = employeeType;
     }
 }

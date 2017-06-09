@@ -12,7 +12,8 @@
     if (purchaseOrders.isEmpty()) {
     %>
     无订单信息
-    <% } else {
+    <%
+    } else {
         for (PurchaseOrder purchaseOrder : purchaseOrders) {
     %>
     <table>
