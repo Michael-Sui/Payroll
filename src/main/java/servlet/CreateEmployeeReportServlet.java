@@ -1,5 +1,6 @@
 package servlet;
 
+import bean.PurchaseOrder;
 import bean.Salary;
 import bean.TimeCard;
 import org.apache.logging.log4j.LogManager;
@@ -51,16 +52,11 @@ public class CreateEmployeeReportServlet extends HttpServlet {
                     response.sendRedirect("/page/salaryWithEmployeeType1.jsp");
                     break;
                 case 2:
-                    switch (inquireMode) {
-                        case "inquireByDay":
-
-                        case "inquireByMonth":
-
-                        case "inquireAll":
-
-                        default:
-
-                    }
+                    ArrayList<PurchaseOrder> purchaseOrders = database.getSaleEmployeeSalary(id, inquireMode, details);
+                    database.disconnect();
+                    httpSession.setAttribute("purchaseOrders", purchaseOrders);
+                    response.sendRedirect("/page/salaryWithEmployeeType2.jsp");
+                    break;
             }
         } catch (Exception e) {
             LOG.error("抛出了异常");

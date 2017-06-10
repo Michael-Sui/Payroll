@@ -452,4 +452,66 @@ public class Database {
             return -1;
         }
     }
+
+    public ArrayList<PurchaseOrder> getSaleEmployeeSalary(String id, String inquireMode, String details) {
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Calendar now = Calendar.getInstance();
+            java.util.Date date1 = null;
+            java.util.Date date2 = null;
+            String time1 = null;
+            String time2 = null;
+            Timestamp timestamp1 = null;
+            Timestamp timestamp2 = null;
+            switch (inquireMode) {
+                case "inquireByDay":
+                    sql = "SELECT * FROM purchaseorder WHERE id = ? AND time >= ? AND time < ?;";
+                    preparedStatement = connection.prepareStatement(sql);
+                    preparedStatement.setString(1, id);
+                    date1 = simpleDateFormat.parse("" + now.get(Calendar.YEAR) + "-" + now.get(Calendar.MONTH) + "-" + details + " 00:00:00");
+                    date2 = simpleDateFormat.parse("" + now.get(Calendar.YEAR) + "-" + now.get(Calendar.MONTH) + "-" + String.valueOf(Integer.valueOf(details) + 1) + " 00:00:00");
+                    time1 = simpleDateFormat.format(date1);
+                    time2 = simpleDateFormat.format(date2);
+                    timestamp1 = Timestamp.valueOf(time1);
+                    timestamp2 = Timestamp.valueOf(time2);
+                    preparedStatement.setTimestamp(2, timestamp1);
+                    preparedStatement.setTimestamp(3, timestamp2);
+                    break;
+                case "inquireByMonth":
+                    sql = "SELECT * FROM purchaseorder WHERE id = ? AND time >= ? AND time < ?;";
+                    preparedStatement = connection.prepareStatement(sql);
+                    preparedStatement.setString(1, id);
+                    date1 = simpleDateFormat.parse("" + now.get(Calendar.YEAR) + "-" + details + "-01 00:00:00");
+                    date2 = simpleDateFormat.parse("" + now.get(Calendar.YEAR) + "-" + String.valueOf(Integer.valueOf(details) + 1) + "-01 00:00:00");
+                    time1 = simpleDateFormat.format(date1);
+                    time2 = simpleDateFormat.format(date2);
+                    timestamp1 = Timestamp.valueOf(time1);
+                    timestamp2 = Timestamp.valueOf(time2);
+                    preparedStatement.setTimestamp(2, timestamp1);
+                    preparedStatement.setTimestamp(3, timestamp2);
+                    break;
+                case "inquireAll":
+                    sql = "SELECT * FROM purchaseorder WHERE id = ?;";
+                    preparedStatement = connection.prepareStatement(sql);
+                    preparedStatement.setString(1, id);
+                    break;
+            }
+            resultSet = preparedStatement.executeQuery();
+            ArrayList<PurchaseOrder> purchaseOrders = new ArrayList<>();
+            while (resultSet.next()) {
+                PurchaseOrder purchaseOrder = new PurchaseOrder();
+                purchaseOrder.setId(resultSet.getString("id"));
+                purchaseOrder.setOrderId(resultSet.getString("orderId"));
+                purchaseOrder.setTime(resultSet.getTimestamp("time"));
+                purchaseOrder.setMoney(resultSet.getDouble("money"));
+                purchaseOrder.setProportion(resultSet.getDouble("proportion"));
+                purchaseOrders.add(purchaseOrder);
+            }
+            LOG.info(id + "使用查询方式:" + inquireMode + ",查询参数：" + details + "查询销售工资成功");
+            return purchaseOrders;
+        } catch (Exception e) {
+            LOG.error(id + "使用查询方式:" + inquireMode + ",查询参数：" + details + "查询销售人员工资抛出了异常");
+            return null;
+        }
+    }
 }
