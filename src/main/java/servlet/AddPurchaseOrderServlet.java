@@ -34,7 +34,7 @@ public class AddPurchaseOrderServlet extends HttpServlet {
             database.connect();
             database.addPurchaseOrder(purchaseOrder);
             database.disconnect();
-
+            LOG.info("添加订单成功");
             response.sendRedirect("/page/PurchaseOrderServlet");
         } catch (Exception e) {
             LOG.error("抛出了异常");

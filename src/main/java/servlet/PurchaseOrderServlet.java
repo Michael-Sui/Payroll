@@ -37,7 +37,7 @@ public class PurchaseOrderServlet extends HttpServlet {
             purchaseOrders = database.getPurchaseOrder(id);
             database.disconnect();
             httpSession.setAttribute("purchaseOrders", purchaseOrders);
-
+            LOG.info(id + "获取订单成功");
             response.sendRedirect("/page/purchaseOrder.jsp");
         } catch (Exception e) {
             LOG.error("抛出了异常");

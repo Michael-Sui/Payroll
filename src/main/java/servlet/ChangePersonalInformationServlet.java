@@ -39,7 +39,6 @@ public class ChangePersonalInformationServlet extends HttpServlet {
             database.connect();
             database.updatePersonalInformation(personalInformation);
             database.disconnect();
-
             response.sendRedirect("/page/PersonalInformationServlet");
         } catch (Exception e) {
             LOG.error("抛出了异常");

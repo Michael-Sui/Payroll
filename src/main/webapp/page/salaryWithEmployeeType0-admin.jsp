@@ -3,16 +3,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>普通员工工资单</title>
+    <title>管理员工资单</title>
 </head>
 <body>
-<h1>普通员工工资单</h1>
+<h1>被查询员工工资单</h1>
 <br>
 <%
     double commonEmployeeSalary = (double) session.getAttribute("commonEmployeeSalary");
     ArrayList<Salary> salaries = (ArrayList<Salary>) session.getAttribute("salaries");
 %>
-你的基础月工资为<%= commonEmployeeSalary %>
+被查询员工基础月工资为<%= commonEmployeeSalary %>
 <br>
 <%
     if (salaries.isEmpty()) {
@@ -46,6 +46,6 @@
     }
 %>
 <br>
-<a href="/page/main.jsp">返回普通用户主页</a>
+<a href="/page/main-admin.jsp">返回管理员主页</a>
 </body>
 </html>

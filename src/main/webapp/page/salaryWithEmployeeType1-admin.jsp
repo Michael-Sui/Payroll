@@ -3,10 +3,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>计时员工工资单</title>
+    <title>管理员工资单</title>
 </head>
 <body>
-<h1>计时员工工资单</h1>
+<h1>被查询计时员工工资单</h1>
 <br>
 <%
     double hourlyEmployeeSalary = (double) session.getAttribute("hourlyEmployeeSalary");
@@ -15,7 +15,7 @@
     double startTime = 0;
     double endTime = 0;
 %>
-您的时薪是：<%= hourlyEmployeeSalary %>
+查询计时员工时薪是：<%= hourlyEmployeeSalary %>
 <%
     if (timeCards.isEmpty()) {
 %>
@@ -59,10 +59,10 @@
     }
 %>
 <br><br><br>
-您的总计工作时间为：<%= timeCount %>
+查询计时员工的总计工作时间为：<%= timeCount %>
 <br>
 总计工资为：<%= timeCount * hourlyEmployeeSalary %>
 <br>
-<a href="/page/main.jsp">返回普通用户主页</a>
+<a href="/page/main-admin.jsp">返回管理员主页</a>
 </body>
 </html>

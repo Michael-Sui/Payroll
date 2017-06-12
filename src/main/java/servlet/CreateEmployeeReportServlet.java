@@ -31,7 +31,7 @@ public class CreateEmployeeReportServlet extends HttpServlet {
             String details = request.getParameter("details");
             HttpSession httpSession = request.getSession();
             String id = httpSession.getAttribute("user").toString();
-            int employeeType = Integer.valueOf(httpSession.getAttribute("employeeType").toString());
+            int employeeType = (int) httpSession.getAttribute("employeeType");
             Database database = new Database();
             database.connect();
             switch (employeeType) {

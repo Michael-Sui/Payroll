@@ -3,10 +3,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>销售员工工资单</title>
+    <title>管理员工资单</title>
 </head>
 <body>
-<h1>销售员工工资单</h1>
+<h1>被查询销售员工工资单</h1>
 <br>
 <%
     double salaryCount = 0;
@@ -60,10 +60,10 @@
     }
 %>
 <br><br><br>
-您的销售总额是：<%= moneyCount %>
+被查询销售员工的销售总额是：<%= moneyCount %>
 <br>
-您的工资是：<%= salaryCount %>
+被查询销售员工的工资是：<%= salaryCount %>
 <br>
-<a href="/page/main.jsp">返回普通用户主页</a>
+<a href="/page/main-admin.jsp">返回管理员主页</a>
 </body>
 </html>

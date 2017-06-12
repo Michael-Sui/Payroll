@@ -13,7 +13,8 @@ import java.io.IOException;
  */
 @javax.servlet.annotation.WebFilter(filterName = "AuthorityFilter", urlPatterns = "/*")
 public class AuthorityFilter implements javax.servlet.Filter {
-    public void destroy() {}
+    public void destroy() {
+    }
 
     public void doFilter(javax.servlet.ServletRequest request, javax.servlet.ServletResponse response,
                          javax.servlet.FilterChain chain) throws javax.servlet.ServletException, IOException {
@@ -29,14 +30,17 @@ public class AuthorityFilter implements javax.servlet.Filter {
                 !requestPath.endsWith("/index.jsp") &&
                 !requestPath.endsWith("/page/login.jsp") &&
                 !requestPath.endsWith(".jpg") &&
-                !requestPath.endsWith("Servlet")) {
-            LOG.warn("拦截了一个请求");
+                !requestPath.endsWith("Servlet") &&
+                !requestPath.endsWith("ico")
+                ) {
+            LOG.warn("拦截了一个请求" + requestPath);
             httpServletResponse.sendRedirect("/index.jsp");
         } else {
-            LOG.info("通过了一个请求");
+            LOG.info("通过了一个请求" + requestPath);
             chain.doFilter(request, response);
         }
     }
 
-    public void init(javax.servlet.FilterConfig config) throws javax.servlet.ServletException {}
+    public void init(javax.servlet.FilterConfig config) throws javax.servlet.ServletException {
+    }
 }

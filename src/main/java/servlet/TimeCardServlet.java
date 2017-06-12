@@ -35,7 +35,7 @@ public class TimeCardServlet extends HttpServlet {
             TimeCardState timeCardState = database.getTimeCardState(id);
             database.disconnect();
             httpSession.setAttribute("timeCardState", timeCardState);
-
+            LOG.info(id + "获取打卡记录成功");
             response.sendRedirect("/page/timeCard.jsp");
         } catch (Exception e) {
             LOG.error("抛出了异常");

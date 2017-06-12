@@ -1,5 +1,7 @@
 package servlet;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import utils.Database;
 
 import javax.servlet.ServletException;
@@ -20,16 +22,22 @@ public class OffDutyServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
+        Logger LOG = LogManager.getLogger(OffDutyServlet.class);
+        try {
+            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding("UTF-8");
 
-        HttpSession httpSession = request.getSession();
-        String id = httpSession.getAttribute("user").toString();
-        Database database = new Database();
-        database.connect();
-        database.offDuty(id);
-        database.disconnect();
-
-        response.sendRedirect("/page/TimeCardServlet");
+            HttpSession httpSession = request.getSession();
+            String id = httpSession.getAttribute("user").toString();
+            Database database = new Database();
+            database.connect();
+            database.offDuty(id);
+            database.disconnect();
+            LOG.info("更新下班状态成功");
+            response.sendRedirect("/page/TimeCardServlet");
+        } catch (Exception e) {
+            LOG.error("更新下班状态抛出异常");
+            response.sendRedirect("/page/error.jsp");
+        }
     }
 }

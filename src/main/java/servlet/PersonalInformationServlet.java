@@ -35,7 +35,7 @@ public class PersonalInformationServlet extends HttpServlet {
             PersonalInformation personalInformation = database.getPersonalInformation(id);
             database.disconnect();
             httpSession.setAttribute("personalInformation", personalInformation);
-
+            LOG.info(id + "获取个人信息成功");
             response.sendRedirect("/page/personalInformation.jsp");
         } catch (Exception e) {
             LOG.error("抛出了异常");

@@ -37,7 +37,6 @@ public class FindExistPurchaseOrderServlet extends HttpServlet {
             purchaseOrders = database.getPurchaseOrder(id);
             database.disconnect();
             httpSession.setAttribute("purchaseOrders", purchaseOrders);
-
             response.sendRedirect("/page/changePurchaseOrder.jsp");
         } catch (Exception e) {
             LOG.error("抛出了异常");

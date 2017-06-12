@@ -1,11 +1,9 @@
 package utils;
 
-import bean.PersonalInformation;
-import bean.PurchaseOrder;
-import bean.Salary;
-import bean.TimeCard;
+import bean.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import sun.dc.pr.PRError;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
@@ -511,6 +509,201 @@ public class Database {
             return purchaseOrders;
         } catch (Exception e) {
             LOG.error(id + "使用查询方式:" + inquireMode + ",查询参数：" + details + "查询销售人员工资抛出了异常");
+            return null;
+        }
+    }
+
+    public boolean addEmployee(String id, String password, String authority) {
+        try {
+            sql = "INSERT INTO user VALUES(?, ?, ?);";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, id);
+            preparedStatement.setString(2, password);
+            preparedStatement.setString(3, authority.toLowerCase());
+            int result = preparedStatement.executeUpdate();
+            if (result == 0) {
+                LOG.error("添加了重复的用户" + id);
+                return false;
+            }
+            sql = "INSERT INTO information VALUES (?, '0', '0', '0', '0@a.com', 0, '0', 0, 0);";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, id);
+            int result2 = preparedStatement.executeUpdate();
+            if (result2 == 0) {
+                LOG.error("添加用户信息错误" + id);
+                return false;
+            }
+            sql = "INSERT INTO commonemployeesalary VALUES (?, 0);";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, id);
+            int result3 = preparedStatement.executeUpdate();
+            if (result3 == 0) {
+                LOG.error("添加用户信息错误" + id);
+                return false;
+            }
+            sql = "INSERT INTO hourlyemployeesalary VALUES (?, 0);";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, id);
+            int result4 = preparedStatement.executeUpdate();
+            if (result4 == 0) {
+                LOG.error("添加用户信息错误" + id);
+                return false;
+            }
+            LOG.info("添加用户" + id + ", " + password + ", " + authority + "成功");
+            return true;
+        } catch (Exception e) {
+            LOG.info("添加用户" + id + ", " + password + ", " + authority + "抛出了异常");
+            return false;
+        }
+    }
+
+    public boolean isHaveUserById(String id) {
+        try {
+            sql = "SELECT * FROM user WHERE id = ?;";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, id);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                LOG.info("查询到用户" + id);
+                return true;
+            } else {
+                LOG.warn("未查询到用户" + id);
+                return false;
+            }
+        } catch (Exception e) {
+            LOG.error("查询用户" + id + "是否存在时抛出异常");
+            return false;
+        }
+    }
+
+    public User getUser(String id) {
+        try {
+            sql = "SELECT * FROM user WHERE id = ?;";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, id);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                User user = new User();
+                user.setId(resultSet.getString("id"));
+                user.setPassword(resultSet.getString("password"));
+                user.setAuthority(resultSet.getString("authority"));
+                LOG.info("查询用户" + id + "信息成功");
+                return user;
+            } else {
+                LOG.warn("查询用户" + id + "信息失败");
+                return null;
+            }
+        } catch (Exception e) {
+            LOG.error("查询用户" + id + "信息抛出异常");
+            return null;
+        }
+    }
+
+    public void updateUser(User user) {
+        try {
+            sql = "UPDATE user SET password = ?, authority = ? WHERE id = ?;";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, user.getPassword());
+            preparedStatement.setString(2, user.getAuthority());
+            preparedStatement.setString(3, user.getId());
+            int result = preparedStatement.executeUpdate();
+            if (result == 0) {
+                LOG.warn("更新登录信息" + user.getId() + ", " + user.getPassword() + ", " + user.getAuthority() + "失败");
+            } else {
+                LOG.info("更新登录信息" + user.getId() + ", " + user.getPassword() + ", " + user.getAuthority() + "成功");
+            }
+        } catch (Exception e) {
+            LOG.error("更新登录信息" + user.getId() + ", " + user.getPassword() + ", " + user.getAuthority() + "抛出异常");
+        }
+    }
+
+    public void deleteEmployee(String id1) {
+        try {
+            sql = "DELETE FROM user WHERE id = ?;";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, id1);
+            preparedStatement.executeUpdate();
+            sql = "DELETE FROM timecard WHERE id = ?;";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, id1);
+            preparedStatement.executeUpdate();
+            sql = "DELETE FROM salary WHERE id = ?;";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, id1);
+            preparedStatement.executeUpdate();
+            sql = "DELETE FROM purchaseorder WHERE id = ?;";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, id1);
+            preparedStatement.executeUpdate();
+            sql = "DELETE FROM information WHERE id = ?;";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, id1);
+            preparedStatement.executeUpdate();
+            sql = "DELETE FROM hourlyemployeesalary WHERE id = ?;";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, id1);
+            preparedStatement.executeUpdate();
+            sql = "DELETE FROM commonemployeesalary WHERE id = ?;";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, id1);
+            preparedStatement.executeUpdate();
+            LOG.info("删除员工" + id1 + "成功");
+        } catch (Exception e) {
+            LOG.error("删除员工失败");
+        }
+    }
+
+    public void updateCommonEmployeeSalary(CommonEmployeeSalary commonEmployeeSalary) {
+        try {
+            sql = "UPDATE commonemployeesalary SET salary = ? WHERE id = ?;";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setDouble(1, commonEmployeeSalary.getSalary());
+            preparedStatement.setString(2, commonEmployeeSalary.getId());
+            int result = preparedStatement.executeUpdate();
+            if (result == 0) {
+                LOG.error(commonEmployeeSalary.getId() + "更新工资信息" + commonEmployeeSalary.getSalary() + "失败");
+            } else {
+                LOG.info(commonEmployeeSalary.getId() + "更新工资信息" + commonEmployeeSalary.getSalary() + "成功");
+            }
+        } catch (Exception e) {
+            LOG.error(commonEmployeeSalary.getId() + "更新工资信息" + commonEmployeeSalary.getSalary() + "抛出异常");
+        }
+    }
+
+    public void updateHourlyEmployeeSalary(HourlyEmployeeSalary hourlyEmployeeSalary) {
+        try {
+            sql = "UPDATE hourlyemployeesalary SET salary = ? WHERE id = ?;";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setDouble(1, hourlyEmployeeSalary.getSalary());
+            preparedStatement.setString(2, hourlyEmployeeSalary.getId());
+            int result = preparedStatement.executeUpdate();
+            if (result == 0) {
+                LOG.error(hourlyEmployeeSalary.getId() + "更新工资信息" + hourlyEmployeeSalary.getSalary() + "失败");
+            } else {
+                LOG.info(hourlyEmployeeSalary.getId() + "更新工资信息" + hourlyEmployeeSalary.getSalary() + "成功");
+            }
+        } catch (Exception e) {
+            LOG.error(hourlyEmployeeSalary.getId() + "更新工资信息" + hourlyEmployeeSalary.getSalary() + "抛出异常");
+        }
+    }
+
+    public ArrayList<Salary> getAllSalaries() {
+        try {
+            sql = "SELECT * from salary;";
+            preparedStatement = connection.prepareStatement(sql);
+            resultSet = preparedStatement.executeQuery();
+            ArrayList<Salary> salaries = new ArrayList<>();
+            while (resultSet.next()) {
+                Salary salary = new Salary();
+                salary.setId(resultSet.getString("id"));
+                salary.setTime(resultSet.getTimestamp("time"));
+                salary.setSalary(resultSet.getDouble("salary"));
+                salaries.add(salary);
+            }
+            LOG.info("获取全部工资信息成功");
+            return salaries;
+        } catch (Exception e) {
+            LOG.error("获取全部工资信息失败");
             return null;
         }
     }
