@@ -10,7 +10,7 @@
     <table>
         <tr>
             <td>用户名：</td>
-            <td><input type="text" name="id" required></td>
+            <td><input type="text" name="id" maxlength="20" required></td>
         </tr>
         <tr>
             <td></td>

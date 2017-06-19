@@ -20,21 +20,26 @@ public class AdminFilter implements Filter {
     }
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
-
         Logger LOG = LogManager.getLogger(AdminFilter.class);
-        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-        HttpSession httpSession = httpServletRequest.getSession();
-        String userAuthority = (String) httpSession.getAttribute("authority");
-        String requestPath = httpServletRequest.getServletPath();
-        if (requestPath.endsWith("-admin.jsp") && !userAuthority.equals("ADMIN")) {
-            LOG.warn("拦截了一个请求");
+        try {
+            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding("UTF-8");
+
+            HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+            HttpSession httpSession = httpServletRequest.getSession();
+            String userAuthority = (String) httpSession.getAttribute("authority");
+            String requestPath = httpServletRequest.getServletPath();
+            if (requestPath.endsWith("-admin.jsp") && !userAuthority.equals("ADMIN")) {
+                LOG.warn("拦截了一个请求");
+                httpServletResponse.sendRedirect("/index.jsp");
+            } else {
+                LOG.info("通过了一个请求");
+                chain.doFilter(request, response);
+            }
+        } catch (Exception e) {
+            LOG.warn("抛出了一个异常");
             httpServletResponse.sendRedirect("/index.jsp");
-        } else {
-            LOG.info("通过了一个请求");
-            chain.doFilter(request, response);
         }
     }
 

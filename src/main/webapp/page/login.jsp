@@ -10,11 +10,11 @@
     <table>
         <tr>
             <td>用户名：</td>
-            <td><input type="text" name="id" required></td>
+            <td><input type="text" name="id" maxlength="20" required></td>
         </tr>
         <tr>
             <td>密码：</td>
-            <td><input type="password" name="password" required></td>
+            <td><input type="password" name="password" maxlength="20" required></td>
         </tr>
         <tr>
             <td></td>

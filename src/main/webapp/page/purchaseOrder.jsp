@@ -20,22 +20,22 @@
 %>
 <table>
     <tr>
-        <td>订单编号</td>
+        <td>订单编号：</td>
         <td><%= purchaseOrder.getOrderId() %>
         </td>
     </tr>
     <tr>
-        <td>订单时间</td>
+        <td>订单时间：</td>
         <td><%= purchaseOrder.getTime() %>
         </td>
     </tr>
     <tr>
-        <td>订单金额</td>
+        <td>订单金额：</td>
         <td><%= purchaseOrder.getMoney() %>
         </td>
     </tr>
     <tr>
-        <td>订单抽成</td>
+        <td>订单抽成：</td>
         <td><%= purchaseOrder.getProportion() %>
         </td>
     </tr>

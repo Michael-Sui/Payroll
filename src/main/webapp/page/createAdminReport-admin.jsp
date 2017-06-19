@@ -9,11 +9,11 @@
 <form method="post" action="CreateAdminReportAdminServlet">
     <table>
         <tr>
-            <td>被查询人用户名</td>
-            <td><input type="text" name="id" required></td>
+            <td>被查询人用户名：</td>
+            <td><input type="text" name="id" maxlength="20" required></td>
         </tr>
         <tr>
-            <td>查询方式</td>
+            <td>查询方式：</td>
             <td>
                 <select name="inquireMode">
                     <option value="inquireByDay">查询某一天</option>
@@ -25,7 +25,7 @@
         </tr>
         <tr>
             <td>具体信息：</td>
-            <td><input type="text" name="details"></td>
+            <td><input type="text" name="details" maxlength="20"></td>
         </tr>
         <tr>
             <td></td>

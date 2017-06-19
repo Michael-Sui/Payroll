@@ -10,15 +10,15 @@
     <table>
         <tr>
             <td>用户名：</td>
-            <td><input type="text" name="id" required></td>
+            <td><input type="text" name="id" maxlength="20" required></td>
         </tr>
         <tr>
             <td>密码：</td>
-            <td><input type="text" name="password" required></td>
+            <td><input type="text" name="password" maxlength="20" required></td>
         </tr>
         <tr>
             <td>权限：</td>
-            <td><input type="text" name="authority" required></td>
+            <td><input type="text" name="authority" maxlength="20" required></td>
         </tr>
         <tr>
             <td></td>

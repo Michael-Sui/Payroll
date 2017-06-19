@@ -25,13 +25,13 @@
             <td><input type="text" name="time" value=<%= purchaseOrder.getTime() %> required></td>
         </tr>
         <tr>
-            <td>订单金额</td>
-            <td><input type="number" step="0.01" name="money" value=<%= purchaseOrder.getMoney() %> required></td>
+            <td>订单金额：</td>
+            <td><input type="number" step="0.01" name="money" value=<%= purchaseOrder.getMoney() %> maxlength="20" required></td>
         </tr>
         <tr>
-            <td>订单抽成</td>
+            <td>订单抽成：</td>
             <td><input type="number" step="0.0001" name="proportion"
-                       value=<%= purchaseOrder.getProportion() %> required></td>
+                       value=<%= purchaseOrder.getProportion() %> maxlength="20" required></td>
         </tr>
         <tr>
             <td></td>

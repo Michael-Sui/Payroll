@@ -17,7 +17,7 @@
         </tr>
         <tr>
             <td>订单编号：</td>
-            <td><input type="text" name="orderId" required></td>
+            <td><input type="text" name="orderId" maxlength="20" required></td>
         </tr>
         <tr>
             <td>订单时间：</td>
@@ -25,11 +25,11 @@
         </tr>
         <tr>
             <td>订单金额：</td>
-            <td><input type="number" step="0.01" name="money" required></td>
+            <td><input type="number" step="0.01" name="money" maxlength="20" required></td>
         </tr>
         <tr>
             <td>订单抽成：</td>
-            <td><input type="number" step="0.0001" name="proportion" required></td>
+            <td><input type="number" step="0.0001" name="proportion" maxlength="20" required></td>
         </tr>
         <tr>
             <td></td>

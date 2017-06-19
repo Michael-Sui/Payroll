@@ -28,49 +28,49 @@
 <form method="post" action="ChangeEmployeeDetailsAdminServlet">
     <table>
         <tr>
-            <td>用户名</td>
+            <td>用户名：</td>
             <td><input type="text" name="id" value=<%= user.getId() %> readonly></td>
         </tr>
         <tr>
-            <td>密码</td>
-            <td><input type="text" name="password" value=<%= user.getPassword() %> required></td>
+            <td>密码：</td>
+            <td><input type="text" name="password" value=<%= user.getPassword() %> maxlength="20" required></td>
         </tr>
         <tr>
-            <td>权限</td>
-            <td><input type="text" name="authority" value=<%= user.getAuthority() %> required></td>
+            <td>权限：</td>
+            <td><input type="text" name="authority" value=<%= user.getAuthority() %> maxlength="20" required></td>
         </tr>
         <tr>
-            <td>姓名</td>
-            <td><input type="text" name="name" value=<%= personalInformation.getName() %> required></td>
+            <td>姓名：</td>
+            <td><input type="text" name="name" value=<%= personalInformation.getName() %> maxlength="20" required></td>
         </tr>
         <tr>
-            <td>性别</td>
-            <td><input type="text" name="gender" value=<%= personalInformation.getGender() %> required></td>
+            <td>性别：</td>
+            <td><input type="text" name="gender" value=<%= personalInformation.getGender() %> maxlength="20" required></td>
         </tr>
         <tr>
-            <td>电话号码</td>
-            <td><input type="text" name="phoneNumber" value=<%= personalInformation.getPhoneNumber() %> required></td>
+            <td>电话号码：</td>
+            <td><input type="text" name="phoneNumber" value=<%= personalInformation.getPhoneNumber() %> maxlength="20" required></td>
         </tr>
         <tr>
-            <td>电子邮箱地址</td>
-            <td><input type="email" name="email" value=<%= personalInformation.getEmail() %> required></td>
+            <td>电子邮箱地址：</td>
+            <td><input type="email" name="email" value=<%= personalInformation.getEmail() %> maxlength="30" required></td>
         </tr>
         <tr>
-            <td>年龄</td>
-            <td><input type="number" name="age" value=<%= personalInformation.getAge() %> required></td>
+            <td>年龄：</td>
+            <td><input type="number" name="age" value=<%= personalInformation.getAge() %> maxlength="11" required></td>
         </tr>
         <tr>
-            <td>家庭地址</td>
-            <td><input type="text" name="address" value=<%= personalInformation.getAddress() %> required></td>
+            <td>家庭地址：</td>
+            <td><input type="text" name="address" value=<%= personalInformation.getAddress() %> maxlength="30" required></td>
         </tr>
         <tr>
-            <td>工资支付方式</td>
-            <td><input type="number" name="paymentMethod" value=<%= personalInformation.getPaymentMethod() %> required>
+            <td>工资支付方式：</td>
+            <td><input type="number" name="paymentMethod" value=<%= personalInformation.getPaymentMethod() %> maxlength="11" required>
             </td>
         </tr>
         <tr>
-            <td>员工类型</td>
-            <td><input type="number" name="employeeType" value=<%= personalInformation.getEmployeeType() %> required>
+            <td>员工类型：</td>
+            <td><input type="number" name="employeeType" value=<%= personalInformation.getEmployeeType() %> maxlength="11" required>
             </td>
         </tr>
         <%
@@ -78,7 +78,7 @@
                 case 0:
         %>
         <tr>
-            <td>基础月工资是</td>
+            <td>基础月工资是：</td>
             <td><input type="number" name="commonSalary" value=<%= commonEmployeeSalary.getSalary() %> required></td>
         </tr>
         <%
@@ -86,7 +86,7 @@
             case 1:
         %>
         <tr>
-            <td>时薪是</td>
+            <td>时薪是：</td>
             <td><input type="number" name="hourlySalary" value=<%= hourlyEmployeeSalary.getSalary() %> required></td>
         </tr>
         <%

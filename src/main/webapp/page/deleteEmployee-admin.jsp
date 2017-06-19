@@ -9,12 +9,12 @@
 <form method="post" action="DeleteEmployeeAdminServlet">
     <table>
         <tr>
-            <td>被删除人的用户名</td>
-            <td><input type="text" name="id1" required></td>
+            <td>被删除人的用户名：</td>
+            <td><input type="text" name="id1" maxlength="20" required></td>
         </tr>
         <tr>
-            <td>请重复输入被删除人的用户名</td>
-            <td><input type="text" name="id2" required></td>
+            <td>请重复输入被删除人的用户名：</td>
+            <td><input type="text" name="id2" maxlength="20" required></td>
         </tr>
         <tr>
             <td></td>

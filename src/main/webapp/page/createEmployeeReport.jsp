@@ -41,7 +41,7 @@
         </tr>
         <tr>
             <td>具体信息：</td>
-            <td><input type="text" name="details"></td>
+            <td><input type="text" name="details" maxlength="20"></td>
         </tr>
         <tr>
             <td></td>

@@ -12,47 +12,47 @@
 %>
 <table>
     <tr>
-        <td>用户名</td>
+        <td>用户名：</td>
         <td><%= personalInformation.getId() %>
         </td>
     </tr>
     <tr>
-        <td>姓名</td>
+        <td>姓名：</td>
         <td><%= personalInformation.getName() %>
         </td>
     </tr>
     <tr>
-        <td>性别</td>
+        <td>性别：</td>
         <td><%= personalInformation.getGender() %>
         </td>
     </tr>
     <tr>
-        <td>电话号码</td>
+        <td>电话号码：</td>
         <td><%= personalInformation.getPhoneNumber() %>
         </td>
     </tr>
     <tr>
-        <td>电子邮箱地址</td>
+        <td>电子邮箱地址：</td>
         <td><%= personalInformation.getEmail() %>
         </td>
     </tr>
     <tr>
-        <td>年龄</td>
+        <td>年龄：</td>
         <td><%= personalInformation.getAge() %>
         </td>
     </tr>
     <tr>
-        <td>家庭地址</td>
+        <td>家庭地址：</td>
         <td><%= personalInformation.getAddress() %>
         </td>
     </tr>
     <tr>
-        <td>工资支付方式</td>
+        <td>工资支付方式：</td>
         <td><%= personalInformation.getPaymentMethod() %>
         </td>
     </tr>
     <tr>
-        <td>员工类型</td>
+        <td>员工类型：</td>
         <td><%= personalInformation.getEmployeeType() %>
         </td>
     </tr>
