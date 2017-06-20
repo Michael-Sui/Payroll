@@ -707,4 +707,174 @@ public class Database {
             return null;
         }
     }
+
+    public ArrayList<CommonEmployeeSalary> getAllCommonEmployeeSalary() {
+        try {
+            sql = "SELECT * FROM commonemployeesalary;";
+            preparedStatement = connection.prepareStatement(sql);
+            resultSet = preparedStatement.executeQuery();
+            ArrayList<CommonEmployeeSalary> commonEmployeeSalaryArrayList = new ArrayList<>();
+            while (resultSet.next()) {
+                CommonEmployeeSalary commonEmployeeSalary = new CommonEmployeeSalary();
+                commonEmployeeSalary.setId(resultSet.getString("id"));
+                commonEmployeeSalary.setSalary(resultSet.getDouble("salary"));
+                commonEmployeeSalaryArrayList.add(commonEmployeeSalary);
+            }
+            LOG.info("获取全部普通员工列表成功");
+            return commonEmployeeSalaryArrayList;
+        } catch (Exception e) {
+            LOG.error("获取全部普通员工列表抛出异常");
+            return null;
+        }
+    }
+
+    public void wagesOfCommonEmployee(ArrayList<CommonEmployeeSalary> commonEmployeeSalaryArrayList, int month) {
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Calendar now = Calendar.getInstance();
+            java.util.Date date1 = null;
+            java.util.Date date2 = null;
+            String time1 = null;
+            String time2 = null;
+            Timestamp timestamp1 = null;
+            Timestamp timestamp2 = null;
+            for (CommonEmployeeSalary commonEmployeeSalary : commonEmployeeSalaryArrayList) {
+                if (commonEmployeeSalary.getSalary() == 0) {
+                    continue;
+                }
+                sql = "SELECT * FROM salary WHERE id = ? AND time >= ? AND time < ?;";
+                preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setString(1, commonEmployeeSalary.getId());
+                date1 = simpleDateFormat.parse("" + now.get(Calendar.YEAR) + "-" + (month) + "-01 00:00:00");
+                date2 = simpleDateFormat.parse("" + now.get(Calendar.YEAR) + "-" + String.valueOf(month + 1) + "-01 00:00:00");
+                time1 = simpleDateFormat.format(date1);
+                time2 = simpleDateFormat.format(date2);
+                timestamp1 = Timestamp.valueOf(time1);
+                timestamp2 = Timestamp.valueOf(time2);
+                preparedStatement.setTimestamp(2, timestamp1);
+                preparedStatement.setTimestamp(3, timestamp2);
+                resultSet = preparedStatement.executeQuery();
+                if (!resultSet.next()) {
+                    sql = "INSERT INTO salary VALUES(?, ?, ?);";
+                    preparedStatement = connection.prepareStatement(sql);
+                    preparedStatement.setString(1, commonEmployeeSalary.getId());
+                    preparedStatement.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
+                    preparedStatement.setDouble(3, commonEmployeeSalary.getSalary());
+                    preparedStatement.executeUpdate();
+                    LOG.info(commonEmployeeSalary.getId() + "发放工资成功");
+                }
+            }
+        } catch (Exception e) {
+            LOG.error("发放工资时抛出异常");
+        }
+    }
+
+    public ArrayList<HourlyEmployeeSalary> getAllHourlyEmployeeSalary() {
+        try {
+            sql = "SELECT * FROM hourlyemployeesalary;";
+            preparedStatement = connection.prepareStatement(sql);
+            resultSet = preparedStatement.executeQuery();
+            ArrayList<HourlyEmployeeSalary> hourlyEmployeeSalaryArrayList = new ArrayList<>();
+            while (resultSet.next()) {
+                HourlyEmployeeSalary hourlyEmployeeSalary = new HourlyEmployeeSalary();
+                hourlyEmployeeSalary.setId(resultSet.getString("id"));
+                hourlyEmployeeSalary.setSalary(resultSet.getDouble("salary"));
+                hourlyEmployeeSalaryArrayList.add(hourlyEmployeeSalary);
+            }
+            LOG.info("获取全部计时员工列表成功");
+            return hourlyEmployeeSalaryArrayList;
+        } catch (Exception e) {
+            LOG.error("获取全部计时员工列表抛出异常");
+            return null;
+        }
+    }
+
+    public void wagesOfHourlyEmployee(ArrayList<HourlyEmployeeSalary> hourlyEmployeeSalaryArrayList) {
+        try {
+            for (HourlyEmployeeSalary hourlyEmployeeSalary : hourlyEmployeeSalaryArrayList) {
+                if (hourlyEmployeeSalary.getSalary() == 0) {
+                    continue;
+                }
+                sql = "SELECT * FROM timecard WHERE id = ?;";
+                preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setString(1, hourlyEmployeeSalary.getId());
+                resultSet = preparedStatement.executeQuery();
+                double timeCount = 0;
+                double salary = 0;
+                double startTime = 0;
+                double endTime = 0;
+                while (resultSet.next()) {
+                    double time = resultSet.getTimestamp("time").getHours();
+                    int flag = resultSet.getInt("flag");
+                    if (flag == 0) {
+                        startTime = time;
+                    } else if (flag == 1) {
+                        endTime = time;
+                        timeCount += endTime - startTime;
+                    }
+                }
+                salary = timeCount * hourlyEmployeeSalary.getSalary();
+                sql = "INSERT INTO salary VALUES(?, ?, ?);";
+                preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setString(1, hourlyEmployeeSalary.getId());
+                preparedStatement.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
+                preparedStatement.setDouble(3, salary);
+                preparedStatement.executeUpdate();
+                LOG.info(hourlyEmployeeSalary.getId() + "发放工资成功");
+                sql = "DELETE FROM timecard WHERE id = ?;";
+                preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setString(1, hourlyEmployeeSalary.getId());
+                preparedStatement.executeUpdate();
+                LOG.info(hourlyEmployeeSalary.getId() + "删除打卡记录成功");
+            }
+        } catch (Exception e) {
+            LOG.error("小时工发放工资抛出异常");
+        }
+    }
+
+    public ArrayList<PurchaseOrder> getAllPurchaseOrder() {
+        try {
+            sql = "SELECT * FROM purchaseorder;";
+            preparedStatement = connection.prepareStatement(sql);
+            resultSet = preparedStatement.executeQuery();
+            ArrayList<PurchaseOrder> purchaseOrderArrayList = new ArrayList<>();
+            while (resultSet.next()) {
+                PurchaseOrder purchaseOrder = new PurchaseOrder();
+                purchaseOrder.setId(resultSet.getString("id"));
+                purchaseOrder.setOrderId(resultSet.getString("orderId"));
+                purchaseOrder.setTime(resultSet.getTimestamp("time"));
+                purchaseOrder.setMoney(resultSet.getDouble("money"));
+                purchaseOrder.setProportion(resultSet.getDouble("proportion"));
+                purchaseOrderArrayList.add(purchaseOrder);
+            }
+            LOG.info("获取全部订单信息成功");
+            return purchaseOrderArrayList;
+        } catch (Exception e) {
+            LOG.error("获取全部订单信息抛出异常");
+            return null;
+        }
+    }
+
+    public void wagesOfSaleEmployee(ArrayList<PurchaseOrder> purchaseOrderArrayList) {
+        try {
+            for (PurchaseOrder purchaseOrder : purchaseOrderArrayList) {
+                double salary = purchaseOrder.getMoney() * purchaseOrder.getProportion();
+                sql = "INSERT INTO salary VALUES(?, ?, ?);";
+                preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setString(1, purchaseOrder.getId());
+                preparedStatement.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
+                preparedStatement.setDouble(3, salary);
+                preparedStatement.executeUpdate();
+                LOG.info(purchaseOrder.getOrderId() + "订单工资发放成功");
+                Thread.sleep(1000);
+                sql = "DELETE FROM purchaseorder WHERE orderID = ?;";
+                preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setString(1, purchaseOrder.getOrderId());
+                preparedStatement.executeUpdate();
+                LOG.info(purchaseOrder.getOrderId() + "订单信息已删除");
+            }
+        } catch (Exception e) {
+            LOG.error("订单工资发放抛出异常");
+        }
+    }
 }

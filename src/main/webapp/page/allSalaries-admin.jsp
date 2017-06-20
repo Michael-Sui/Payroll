@@ -25,9 +25,12 @@
         </td>
     </tr>
     <tr>
-        <td></td>
-        <td><%= salary.getSalary() %>
-        </td>
+        <td>时间：</td>
+        <td><%= salary.getTime() %></td>
+    </tr>
+    <tr>
+        <td>工资：</td>
+        <td><%= salary.getSalary() %></td>
     </tr>
 </table>
 <br>

@@ -10,6 +10,8 @@
 <br>
 <a href="/page/createAdminReport-admin.jsp">总体工资单报告</a>
 <br>
+<a href="/page/SettlementOfSalaryServlet">工资结算</a>
+<br>
 <a href="/page/login.jsp">退出登录</a>
 </body>
 </html>
